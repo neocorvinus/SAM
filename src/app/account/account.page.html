@@ -6,31 +6,40 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row style="background-color:aqua;">
-      <ion-title style="text-align: center;">
+    <ion-row style="padding-top:17%;">
+      <ion-title style="text-align: center;font-weight:bold;size:large;font-size:2em;">
         Mon Compte
       </ion-title>
     </ion-row>
-    <ion-row>
-      <ion-col size="1"></ion-col>
-      <ion-col style="background-color:aqua;" size="10">
-        <form (ngSubmit)="validate()">
+    <ion-row class="ion-align-items-center" style="padding-top:8%;">
+      <ion-col size="2"></ion-col>
+      <ion-col size="8" class="ion-text-center">
+        <form (ngSubmit)="validate()" [formGroup]="formGroup">
           <ion-item>
-            <ion-label position="floating" style="color:black;">Prénom</ion-label>
-            <ion-input type="text" [(ngModel)]="account.firstName" name="firstName"></ion-input>
+            <ion-label position="floating" style="color:rgba(0, 0, 0, 0.685);">Prénom</ion-label>
+            <ion-input type="text" formControlName="firstNameForm"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating" style="color:black;">Nom de famille</ion-label>
-            <ion-input type="text" [(ngModel)]="account.lastName" name="lastName"></ion-input>
+            <ion-label position="floating" style="color:rgba(0, 0, 0, 0.685);">Nom de famille</ion-label>
+            <ion-input type="text" formControlName="lastNameForm"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating" style="color:black;">Email</ion-label>
-            <ion-input type="text" [(ngModel)]="account.email" name="email"></ion-input>
+            <ion-label position="floating" style="color:rgba(0, 0, 0, 0.685);">Email</ion-label>
+            <ion-input type="text" formControlName="emailForm"></ion-input>
           </ion-item>
-          <button ion-button type="submit" block>Confirmer</button>
+          <ion-item>
+            <ion-label position="floating" style="color:rgba(0, 0, 0, 0.685);">Mot de passe</ion-label>
+            <ion-input type="password" formControlName="passwordForm"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating" style="color:rgba(0, 0, 0, 0.685);">Mot de passe (encore)</ion-label>
+            <ion-input type="password" formControlName="passwordAgainForm"></ion-input>
+          </ion-item>
+          <ion-button type="submit" block color="primary" [disabled]="formGroup.invalid 
+          || formGroup.controls.passwordForm.value != formGroup.controls.passwordAgainForm.value">Confirmer</ion-button>
         </form>
       </ion-col>
-      <ion-col size="1"></ion-col>
+      <ion-col size="2"></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
