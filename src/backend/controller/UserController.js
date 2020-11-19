@@ -22,18 +22,14 @@ user.post('/register', (req, res) => {
         role_user_id: req.body.role_user_id,
         email: req.body.email
     }
-
-    console.log(userData)
-
-    userData.password_user = bcrypt.hashSync(userData.password, 12)
+    userData.password = bcrypt.hashSync(userData.password, 12)
     User.create(userData).then(user => {
         let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, { expiresIn: 1440 })
         res.json({token: token})
     }).catch(err => {
-        res.send(err)
-        /*if (err.errors[0].path === "index_phone_number_unique") res.status(401).send("Le numéro de télephone est déjà lié un compte existant")
-        else if (err.errors[0].path === "email_user_unique") res.status(401).send("L'adresse email est déjà lié un compte existant")
-        else res.status(401).send("Une erreur est survenue dans la mise à jour du compte")*/
+        if (err.errors[0].path === "unique_phone_number") res.status(401).send("Le numéro de télephone est déjà lié un compte existant")
+        else if (err.errors[0].path === "unique_email") res.status(401).send("L'adresse email est déjà lié un compte existant")
+        else res.status(401).send("Une erreur est survenue dans la mise à jour du compte")
     })
 })
 
@@ -74,6 +70,38 @@ user.get('/profile', (req, res) => {
         else res.json({message: "Cet utilisateur est introuvable"})
     }).catch(err => {
         res.json({message: err})
+    })
+})
+
+// EDIT
+user.put('/edit/:id_user', (req, res) => {
+    const id_user = req.params.id_user;
+
+    User.update(req.body, {
+        where: { id_user: id_user}
+    }).then(num => {
+
+        if (num =! 0) {
+            User.findOne({
+                where: {
+                    id_user: id_user
+                },
+                include: [Role]
+            }).then(user => {
+                let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
+                    expiresIn: 1440
+                })
+                res.json({token: token})
+            }).catch(() => {
+                res.status(500).send("Le compte modifié n'a pas été trouvé")
+            })
+        }
+        else res.status(401).send("Le compte n'a pas été modifié")
+
+    }).catch(err => {
+        if (err.errors[0].path === "unique_phone_number") res.status(401).send("Le numéro de télephone a déjà été renseigné")
+        else if (err.errors[0].path === "unique_email") res.status(401).send("L'adresse email a déjà été renseignée")
+        else res.status(401).send("Une erreur est survenue dans la mise à jour du compte")
     })
 })
 
