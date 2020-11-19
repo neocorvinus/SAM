@@ -33,7 +33,7 @@ module.exports = db.sequelize.define(
             allowNull: false
         },
         role_user_id: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             references: {
                 model: RoleUser,
@@ -45,6 +45,9 @@ module.exports = db.sequelize.define(
         timestamps: false,
         freezeTableName: 1,
         underscored: true,
-        camelCase: false
+        camelCase: false,
+        defaultScope: {
+            attributes: { exclude: ['role_user_id', 'roleUserId'] }
+        }
     }
 )
