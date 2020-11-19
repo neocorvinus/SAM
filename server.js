@@ -41,7 +41,9 @@ User.belongsTo(Role)
 User.hasMany(Ride);
 Ride.belongsTo(User);
 
-Ride.hasOne(Rating);
+Ride.hasOne(Rating, {
+    onDelete:'CASCADE'
+});
 Rating.belongsTo(Ride);
 
 
