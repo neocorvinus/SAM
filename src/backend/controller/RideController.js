@@ -4,9 +4,8 @@ const _ = require('lodash');
 const Ride = require("../model/Ride");
 const jwt = require("jsonwebtoken")
 
-
-ride.post('/add', (req, res) => {
-
+//Add ride
+exports.add = (req, res) => {
     // Test if token exist
     // TODO Define global json response
     console.log(req.headers);
@@ -31,9 +30,9 @@ ride.post('/add', (req, res) => {
             res.send("Erreur lors de la création de la course");
         })
     })
-})
+}
 
-ride.get('/delete/:id', (req, res) => {
+exports.delete = (req, res) => {
     let id = req.params.id;
     jwt.verify(req.headers['authorization'], process.env.SECRET_KEY, function (err, decoded) {
         if (err) {
@@ -54,6 +53,4 @@ ride.get('/delete/:id', (req, res) => {
             res.send("Erreur lors de la suppression");
         })
     })
-})
-
-module.exports = ride
+}

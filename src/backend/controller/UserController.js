@@ -12,8 +12,10 @@ const atob = require('atob');
 
 process.env.SECRET_KEY = 'secret'
 
+
+
 // REGISTER
-user.post('/register', (req, res) => {
+exports.register = (req, res) => {
     const userData = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
@@ -31,10 +33,10 @@ user.post('/register', (req, res) => {
         else if (err.errors[0].path === "unique_email") res.status(401).send("L'adresse email est déjà lié un compte existant")
         else res.status(401).send("Une erreur est survenue dans la mise à jour du compte")
     })
-})
+}
 
 // LOGIN
-user.post('/login', (req, res) => {
+exports.login = (req, res) => {
     User.findOne({
         where: {
             [Op.or]: [
@@ -54,10 +56,10 @@ user.post('/login', (req, res) => {
         res.send(err)
         //res.status(500).send("Aucun compte associé à cet idenfitiant")
     })
-})
+}
 
 // PROFILE
-user.get('/profile', (req, res) => {
+exports.profile = (req, res) => {
     let decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
 
     User.findOne({
@@ -71,10 +73,11 @@ user.get('/profile', (req, res) => {
     }).catch(err => {
         res.json({message: err})
     })
-})
+}
+
 
 // EDIT
-user.put('/edit/:id_user', (req, res) => {
+exports.edit = (req, res) => {
     const id_user = req.params.id_user;
 
     User.update(req.body, {
@@ -103,6 +106,4 @@ user.put('/edit/:id_user', (req, res) => {
         else if (err.errors[0].path === "unique_email") res.status(401).send("L'adresse email a déjà été renseignée")
         else res.status(401).send("Une erreur est survenue dans la mise à jour du compte")
     })
-})
-
-module.exports = user
+}

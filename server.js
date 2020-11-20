@@ -20,7 +20,13 @@ app.use(session({
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
+
+var corsParam = {
+    credentials: true,
+    origin: "http://localhost:4200"
+};
+
+app.use(cors(corsParam))
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -47,17 +53,17 @@ Ride.hasOne(Rating, {
 Rating.belongsTo(Ride);
 
 
-let UserController = require('./src/backend/controller/UserController')
-app.use('/api/user', UserController)
+let UserRoute = require('./src/backend/routes/user.route')
+app.use('/api/user', UserRoute)
 
-let RoleController = require('./src/backend/controller/RoleController')
-app.use('/api/role', RoleController)
+let RoleRoute = require('./src/backend/routes/role.route')
+app.use('/api/role', RoleRoute)
 
-let RideController = require('./src/backend/controller/RideController')
-app.use('/api/ride', RideController)
+let RideRoute = require('./src/backend/routes/ride.route')
+app.use('/api/ride', RideRoute)
 
-let RatingController = require('./src/backend/controller/RatingController')
-app.use('/api/rating', RatingController)
+let RatingRoute = require('./src/backend/routes/rating.route')
+app.use('/api/rating', RatingRoute)
 
 let port = process.env.PORT || 4000
 app.listen(port, function () {
